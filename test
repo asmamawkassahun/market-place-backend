@@ -1,0 +1,10 @@
+docker compose up -d postgres redis
+
+cd apps/api
+
+export DATABASE_URL="postgresql://ethi:ethi@localhost:5543/ethi_commerce?schema=public"
+
+
+npm run db:migrate:dev
+
+npm run start:dev

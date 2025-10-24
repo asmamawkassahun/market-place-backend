@@ -1,0 +1,1481 @@
+{
+    "info": {
+        "name": "E-commerce API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_postman_id": "6c5dbb2e-43a6-49ef-9b6a-7f0c9b1dd001"
+    },
+    "item": [
+        {
+            "name": "Health",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('merchantAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Metrics",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('merchantAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/metrics",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "metrics"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Auth - Merchant",
+            "item": [
+                {
+                    "name": "Request OTP (Merchant)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"+251900000001\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/request-otp",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "request-otp"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Verify OTP (Merchant)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "let json;",
+                                    "try { json = pm.response.json(); } catch(e) { json = {}; }",
+                                    "if (json.access_token) { pm.environment.set('merchantAccessToken', json.access_token); }"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"+251900000001\",\n  \"code\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/verify-otp",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "verify-otp"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Auth - Buyer",
+            "item": [
+                {
+                    "name": "Request OTP (Buyer)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"+251900000002\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/request-otp",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "request-otp"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Verify OTP (Buyer)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "let json;",
+                                    "try { json = pm.response.json(); } catch(e) { json = {}; }",
+                                    "if (json.access_token) { pm.environment.set('buyerAccessToken', json.access_token); }"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"+251900000002\",\n  \"code\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/verify-otp",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "verify-otp"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Merchants",
+            "item": [
+                {
+                    "name": "Create Merchant",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('merchantId', json.id); }"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"displayName\": \"Demo Merchant\",\n  \"lat\": 8.9806,\n  \"lon\": 38.7578\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/merchants",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "merchants"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Me",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('merchantId', json.id); }"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('merchantAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/merchants/me",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "merchants",
+                                "me"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Nearby (by lat/lon)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"lat\": 8.9806,\n  \"lon\": 38.7578,\n  \"radiusKm\": 25\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/merchants/nearby",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "merchants",
+                                "nearby"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Summary",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/merchants/summary",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "merchants",
+                                "summary"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Catalog",
+            "item": [
+                {
+                    "name": "List Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalog/categories",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalog",
+                                "categories"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "item": [
+                {
+                    "name": "Create Product",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('productId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Demo Maize\",\n  \"slug\": \"demo-maize\",\n  \"description\": \"Quality maize\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/products",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "products"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Add SKU",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('skuId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"50kg bag\",\n  \"unitType\": \"KG\",\n  \"unitIncrement\": 1,\n  \"pricePerCanonicalUnit\": 1500\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/products/{{productId}}/skus",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "products",
+                                "{{productId}}",
+                                "skus"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/products?q=maize",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "products"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "maize"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Inventory",
+            "item": [
+                {
+                    "name": "Add Lot",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"skuId\": \"{{skuId}}\",\n  \"quantity\": 100\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/inventory/lots",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "inventory",
+                                "lots"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Lots",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('merchantAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/inventory/lots",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "inventory",
+                                "lots"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Addresses (Buyer)",
+            "item": [
+                {
+                    "name": "Create Address",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('addressId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fullName\": \"Buyer One\",\n  \"phone\": \"+251900000002\",\n  \"line1\": \"Churchill Rd\",\n  \"city\": \"Addis Ababa\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/addresses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "addresses"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Addresses",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/addresses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "addresses"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Cart (Buyer)",
+            "item": [
+                {
+                    "name": "Add Item",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"skuId\": \"{{skuId}}\",\n  \"quantity\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/cart/items",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "cart",
+                                "items"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Cart",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/cart",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "cart"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Pricing",
+            "item": [
+                {
+                    "name": "Quote",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"skuId\": \"{{skuId}}\",\n  \"quantity\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/pricing/quote",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "pricing",
+                                "quote"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Set Price",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"skuId\": \"{{skuId}}\",\n  \"amount\": 1600\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/pricing/set",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "pricing",
+                                "set"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Orders (Buyer)",
+            "item": [
+                {
+                    "name": "Create From Cart",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.orderId) { pm.environment.set('orderId', json.orderId); }",
+                                    "if (json.paymentId) { pm.environment.set('paymentId', json.paymentId); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"addressId\": \"{{addressId}}\",\n  \"paymentProvider\": \"telebirr\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/orders/create-from-cart",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "orders",
+                                "create-from-cart"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Orders",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/orders",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "orders"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Payments & Invoices",
+            "item": [
+                {
+                    "name": "Initiate Payment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"paymentId\": \"{{paymentId}}\",\n  \"provider\": \"telebirr\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/payments/initiate",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "payments",
+                                "initiate"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Capture Payment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"paymentId\": \"{{paymentId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/payments/capture",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "payments",
+                                "capture"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Invoice (by orderId)",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/invoices/{{orderId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "invoices",
+                                "{{orderId}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Shipments (Optional)",
+            "item": [
+                {
+                    "name": "Create Shipment (by orderId)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('shipmentId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('merchantAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/shipments/create/{{orderId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "shipments",
+                                "create",
+                                "{{orderId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Confirm Delivery (requires OTP)",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"otp\": \"XXXXXX\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/shipments/confirm/{{shipmentId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "shipments",
+                                "confirm",
+                                "{{shipmentId}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Reviews & QnA",
+            "item": [
+                {
+                    "name": "Create Review",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great quality!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/reviews/product/{{productId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "reviews",
+                                "product",
+                                "{{productId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Reviews",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/reviews/product/{{productId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "reviews",
+                                "product",
+                                "{{productId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Ask Question",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('qnaId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"question\": \"Is this freshly harvested?\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/qna/ask/{{productId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "qna",
+                                "ask",
+                                "{{productId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Answer Question (demo)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"answer\": \"Yes, harvested this week.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/qna/answer/{{qnaId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "qna",
+                                "answer",
+                                "{{qnaId}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Geo & Payouts",
+            "item": [
+                {
+                    "name": "Nearby Merchants (query)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/geo/nearby-merchants?lat=8.9806&lon=38.7578&radiusKm=25",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "geo",
+                                "nearby-merchants"
+                            ],
+                            "query": [
+                                {
+                                    "key": "lat",
+                                    "value": "8.9806"
+                                },
+                                {
+                                    "key": "lon",
+                                    "value": "38.7578"
+                                },
+                                {
+                                    "key": "radiusKm",
+                                    "value": "25"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Request Payout (Merchant)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"amount\": 10000\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/payouts/request",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "payouts",
+                                "request"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "My Payouts (Merchant)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{merchantAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/payouts/mine",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "payouts",
+                                "mine"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Chat (Optional)",
+            "item": [
+                {
+                    "name": "Create Conversation",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "let json = {}; try { json = pm.response.json(); } catch(e) {}",
+                                    "if (json.id) { pm.environment.set('conversationId', json.id); }"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/conversations/{{merchantId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "conversations",
+                                "{{merchantId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Messages",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/conversations/{{conversationId}}/messages",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "conversations",
+                                "{{conversationId}}",
+                                "messages"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Messages",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + (pm.environment.get('buyerAccessToken')||'') });"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/conversations/{{conversationId}}/search?q=hi",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "conversations",
+                                "{{conversationId}}",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "hi"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Mark Read",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/conversations/{{conversationId}}/read/{{messageId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "conversations",
+                                "{{conversationId}}",
+                                "read",
+                                "{{messageId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Invite",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/conversations/{{conversationId}}/invites",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "conversations",
+                                "{{conversationId}}",
+                                "invites"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Redeem Invite",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{buyerAccessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/chat/invites/{{token}}/redeem",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "chat",
+                                "invites",
+                                "{{token}}",
+                                "redeem"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Utilities",
+            "item": [
+                {
+                    "name": "Units Per Unit Display",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/units/per-unit-display?unit=KG&ppcu=1500",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "units",
+                                "per-unit-display"
+                            ],
+                            "query": [
+                                {
+                                    "key": "unit",
+                                    "value": "KG"
+                                },
+                                {
+                                    "key": "ppcu",
+                                    "value": "1500"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Webhook (provider)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event\": \"payment.succeeded\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/webhooks/telebirr",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "webhooks",
+                                "telebirr"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

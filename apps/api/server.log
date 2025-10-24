@@ -1,0 +1,432 @@
+
+> api@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m7:54:32 PM[0m] Starting compilation in watch mode...
+
+[[90m7:54:37 PM[0m] Found 0 errors. Watching for file changes.
+
+Bootstrapping Nest application...
+Using PORT= 3000
+About to call app.listen...
+[Prisma] Database connection failed. API will start but DB calls will fail until resolved. PrismaClientInitializationError: Can't reach database server at `localhost:5543`
+
+Please make sure your database server is running at `localhost:5543`.
+    at r (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:440:17)
+    at async Proxy.onModuleInit (/home/asmamaw/Projects/side/e-commerce/apps/api/src/prisma/prisma.service.ts:8:7)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/hooks/on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application-context.js:242:13)
+    at async NestApplication.init (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application.js:103:9)
+    at async NestApplication.listen (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application.js:175:13)
+    at async bootstrap (/home/asmamaw/Projects/side/e-commerce/apps/api/src/main.ts:47:5) {
+  clientVersion: '6.17.1',
+  errorCode: 'P1001',
+  retryable: undefined
+}
+app.listen resolved
+API listening on http://[::1]:3000
+[19:54:39.172] INFO (7879): Starting Nest application...
+    context: "NestFactory"
+[19:54:39.172] INFO (7879): PrismaModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.172] INFO (7879): PassportModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.172] INFO (7879): NotificationsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.172] INFO (7879): I18nModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.172] INFO (7879): StorageModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ConfigHostModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ThrottlerModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): JwtModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): JwtModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): MetricsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): DiscoveryModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): LoyaltyModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): AppModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): UnitsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ConfigModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): CacheModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ScheduleModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): EventEmitterModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): TerminusModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): LoggerModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): HealthModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): CatalogModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): PricingModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): WebhooksModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): GeoModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): AuthModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): UsersModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): AddressesModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): MerchantsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ProductsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): InventoryModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): CartModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): OrdersModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): KycModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): EscrowModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ReviewsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): QnaModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): PayoutsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): InvoicesModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ShipmentsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): PaymentsModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ChatModule dependencies initialized
+    context: "InstanceLoader"
+[19:54:39.173] INFO (7879): ChatGateway subscribed to the "join" message
+    context: "WebSocketsController"
+[19:54:39.173] INFO (7879): ChatGateway subscribed to the "text" message
+    context: "WebSocketsController"
+[19:54:39.173] INFO (7879): ChatGateway subscribed to the "signal" message
+    context: "WebSocketsController"
+[19:54:39.174] INFO (7879): ChatGateway subscribed to the "typing" message
+    context: "WebSocketsController"
+[19:54:39.174] INFO (7879): ChatGateway subscribed to the "read" message
+    context: "WebSocketsController"
+[19:54:39.174] WARN (7879): Unsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. For more details, refer to the migration guide. Attempting to auto-convert...
+    context: "LegacyRouteConverter"
+[19:54:39.174] WARN (7879): Unsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using [2J[3J[H[[90m7:55:37 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m7:55:38 PM[0m] Found 0 errors. Watching for file changes.
+
+Bootstrapping Nest application...
+Using PORT= 3001
+About to call app.listen...
+[Prisma] Database connection failed. API will start but DB calls will fail until resolved. PrismaClientInitializationError: Can't reach database server at `localhost:5543`
+
+Please make sure your database server is running at `localhost:5543`.
+    at r (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:440:17)
+    at async Proxy.onModuleInit (/home/asmamaw/Projects/side/e-commerce/apps/api/src/prisma/prisma.service.ts:8:7)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/hooks/on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application-context.js:242:13)
+    at async NestApplication.init (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application.js:103:9)
+    at async NestApplication.listen (/home/asmamaw/Projects/side/e-commerce/apps/api/node_modules/@nestjs/core/nest-application.js:175:13)
+    at async bootstrap (/home/asmamaw/Projects/side/e-commerce/apps/api/src/main.ts:47:5) {
+  clientVersion: '6.17.1',
+  errorCode: 'P1001',
+  retryable: undefined
+}
+app.listen resolved
+API listening on http://[::1]:3001
+[19:55:39.889] INFO (8266): Starting Nest application...
+    context: "NestFactory"
+[19:55:39.889] INFO (8266): PrismaModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.889] INFO (8266): PassportModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.889] INFO (8266): NotificationsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.889] INFO (8266): I18nModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.889] INFO (8266): StorageModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ConfigHostModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ThrottlerModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): JwtModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): JwtModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): MetricsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): DiscoveryModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): LoyaltyModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): AppModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): UnitsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ConfigModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): CacheModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ScheduleModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): EventEmitterModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): TerminusModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): LoggerModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): HealthModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): CatalogModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): PricingModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): WebhooksModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): GeoModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): AuthModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): UsersModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): AddressesModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): MerchantsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ProductsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): InventoryModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): CartModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): OrdersModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): KycModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): EscrowModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ReviewsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): QnaModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): PayoutsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): InvoicesModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ShipmentsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): PaymentsModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ChatModule dependencies initialized
+    context: "InstanceLoader"
+[19:55:39.890] INFO (8266): ChatGateway subscribed to the "join" message
+    context: "WebSocketsController"
+[19:55:39.890] INFO (8266): ChatGateway subscribed to the "text" message
+    context: "WebSocketsController"
+[19:55:39.890] INFO (8266): ChatGateway subscribed to the "signal" message
+    context: "WebSocketsController"
+[19:55:39.890] INFO (8266): ChatGateway subscribed to the "typing" message
+    context: "WebSocketsController"
+[19:55:39.890] INFO (8266): ChatGateway subscribed to the "read" message
+    context: "WebSocketsController"
+[19:55:39.890] WARN (8266): Unsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. For more details, refer to the migration guide. Attempting to auto-convert...
+    context: "LegacyRouteConverter"
+[19:55:39.890] WARN (8266): Unsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. For more details, refer to the migration guide. Attempting to auto-convert...
+    context: "LegacyRouteConverter"
+[19:55:39.890] INFO (8266): AppController {/api}:
+    context: "RoutesResolver"
+[19:55:39.890] INFO (8266): Mapped {/api, GET} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): HealthController {/api/health}:
+    context: "RoutesResolver"
+[19:55:39.890] INFO (8266): Mapped {/api/health, GET} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): AuthController {/api/auth}:
+    context: "RoutesResolver"
+[19:55:39.890] INFO (8266): Mapped {/api/auth/request-otp, POST} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/auth/verify-otp, POST} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/auth/refresh, POST} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/auth/revoke, POST} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): UsersController {/api/users}:
+    context: "RoutesResolver"
+[19:55:39.890] INFO (8266): Mapped {/api/users/:id, GET} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): AddressesController {/api/addresses}:
+    context: "RoutesResolver"
+[19:55:39.890] INFO (8266): Mapped {/api/addresses, GET} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/addresses, POST} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/addresses/:id, PATCH} route
+    context: "RouterExplorer"
+[19:55:39.890] INFO (8266): Mapped {/api/addresses/:id, DELETE} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): MerchantsController {/api/merchants}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/merchants, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/merchants/me, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/merchants/update, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/merchants/nearby, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/merchants/summary, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): CatalogController {/api/catalog}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/catalog/categories, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): ProductsController {/api/products}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/products, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/products/:productId/skus, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/products/:id, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/products, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): InventoryController {/api/inventory}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/inventory/lots, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/inventory/lots, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): CartController {/api/cart}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/cart, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/cart/items, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/cart/items/:itemId, DELETE} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): OrdersController {/api/orders}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/orders/create-from-cart, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/orders, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): PaymentsController {/api/payments}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/payments/initiate, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/payments/capture, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): KycController {/api/kyc}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/kyc/submit, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/kyc/review/:merchantId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/kyc/:merchantId, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): UnitsController {/api/units}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/units/per-unit-display, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): PricingController {/api/pricing}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/pricing/quote, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/pricing/set, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): ShipmentsController {/api/shipments}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/shipments/create/:orderId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/shipments/confirm/:shipmentId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): EscrowController {/api/escrow}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/escrow/:paymentId, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/escrow/:paymentId/dispute, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/escrow/:paymentId/release, PATCH} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/escrow/:paymentId/refund, PATCH} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): WebhooksController {/api/webhooks}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/webhooks/:provider, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): ReviewsController {/api/reviews}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/reviews/product/:productId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/reviews/product/:productId, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): QnaController {/api/qna}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/qna/ask/:productId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/qna/answer/:qnaId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/qna/product/:productId, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): GeoController {/api/geo}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/geo/nearby-merchants, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): PayoutsController {/api/payouts}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/payoutsReceived SIGTERM
+oute
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/payouts/mine, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): InvoicesController {/api/invoices}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/invoices/:orderId, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): MetricsController {/api/metrics}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/metrics, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): ChatController {/api/chat}:
+    context: "RoutesResolver"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:merchantId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:conversationId/messages, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:conversationId/search, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:conversationId/read/:latestMessageId, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/messages/:messageId/report, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/admin/reports, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/admin/reports/:reportId/resolve, PATCH} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/ice, GET} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:conversationId/invites, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/invites/:token/redeem, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Mapped {/api/chat/conversations/:conversationId/attachments, POST} route
+    context: "RouterExplorer"
+[19:55:39.891] INFO (8266): Nest application successfully started
+    context: "NestApplication"
+Received SIGTERM
