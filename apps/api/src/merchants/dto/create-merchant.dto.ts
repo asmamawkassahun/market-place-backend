@@ -13,6 +13,10 @@ export class CreateMerchantDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  logoUrl?: string;
+
+  @IsOptional()
   @IsNumber()
   lat?: number;
 

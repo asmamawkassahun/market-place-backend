@@ -6,11 +6,38 @@ export class MerchantsService {
   constructor(private prisma: PrismaService) {}
 
   async create(ownerId: string, data: any) {
+    console.log('=== MERCHANTS SERVICE CREATE ===');
+    console.log('Owner ID:', ownerId);
+    console.log('Data received:', JSON.stringify(data, null, 2));
+    
     const exists = await this.prisma.merchant.findUnique({ where: { ownerId } });
-    if (exists) throw new BadRequestException('Merchant already exists for this owner');
+    if (exists) {
+      console.log('Merchant already exists for owner:', ownerId);
+      throw new BadRequestException('Merchant already exists for this owner');
+    }
+    
+    console.log('Creating merchant in database...');
     return this.prisma.$transaction(async (tx) => {
-      const merchant = await tx.merchant.create({ data: { ownerId, displayName: data.displayName, legalName: data.legalName, description: data.description, lat: data.lat, lon: data.lon, serviceAreas: data.serviceAreas ?? [] } });
+      const merchantData = { 
+        ownerId, 
+        displayName: data.displayName, 
+        legalName: data.legalName, 
+        description: data.description, 
+        logoUrl: data.logoUrl || null,
+        lat: data.lat || null, 
+        lon: data.lon || null, 
+        serviceAreas: data.serviceAreas ?? [] 
+      };
+      
+      console.log('Merchant data for DB:', JSON.stringify(merchantData, null, 2));
+      
+      const merchant = await tx.merchant.create({ data: merchantData });
+      console.log('Merchant created with ID:', merchant.id);
+      
       await tx.user.update({ where: { id: ownerId }, data: { role: 'MERCHANT' as any } });
+      console.log('User role updated to MERCHANT');
+      
+      console.log('=== MERCHANTS SERVICE SUCCESS ===');
       return merchant;
     });
   }

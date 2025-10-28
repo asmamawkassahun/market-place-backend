@@ -93,7 +93,24 @@ export class MerchantsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createMerchant(@CurrentUser() user: any, @Body() body: CreateMerchantDto) {
-    return this.service.createMerchant(user.userId, body);
+    try {
+      console.log('=== MERCHANT CREATION START ===');
+      console.log('User ID:', user.userId);
+      console.log('User object:', user);
+      console.log('Merchant data received:', JSON.stringify(body, null, 2));
+      
+      const result = await this.service.createMerchant(user.userId, body);
+      console.log('Merchant created successfully:', result.id);
+      console.log('=== MERCHANT CREATION SUCCESS ===');
+      return result;
+    } catch (error) {
+      console.error('=== MERCHANT CREATION ERROR ===');
+      console.error('Error details:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      console.error('=== END ERROR ===');
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
