@@ -193,7 +193,22 @@ export declare class ProductsService {
         categoryId?: string;
         description?: string;
         images?: string[];
-    }): Promise<{
+        skus?: any[];
+    }): Promise<({
+        skus: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            unitType: import("@prisma/client").$Enums.UnitType;
+            unitIncrement: number;
+            packageSize: number | null;
+            pricePerCanonicalUnit: number;
+            currency: string;
+            active: boolean;
+            productId: string;
+        }[];
+    } & {
         id: string;
         slug: string;
         name: string;
@@ -203,7 +218,7 @@ export declare class ProductsService {
         images: string[];
         merchantId: string;
         categoryId: string | null;
-    }>;
+    }) | null>;
     updateProduct(ownerUserId: string, productId: string, data: any): Promise<{
         id: string;
         slug: string;
@@ -277,7 +292,21 @@ export declare class ProductsService {
         categoryId?: string;
         description?: string;
         images?: string[];
-    }): Promise<{
+    }): Promise<({
+        skus: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            unitType: import("@prisma/client").$Enums.UnitType;
+            unitIncrement: number;
+            packageSize: number | null;
+            pricePerCanonicalUnit: number;
+            currency: string;
+            active: boolean;
+            productId: string;
+        }[];
+    } & {
         id: string;
         slug: string;
         name: string;
@@ -287,7 +316,7 @@ export declare class ProductsService {
         images: string[];
         merchantId: string;
         categoryId: string | null;
-    }>;
+    }) | null>;
     addSku(productId: string, data: {
         name: string;
         unitType: 'PIECE' | 'KG' | 'LITER' | 'METER';

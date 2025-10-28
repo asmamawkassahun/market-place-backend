@@ -142,7 +142,29 @@ let ProductsService = class ProductsService {
         const merchant = await this.prisma.merchant.findUnique({ where: { ownerId: ownerUserId } });
         if (!merchant)
             throw new common_1.NotFoundException('Merchant not found for current user');
-        return this.prisma.product.create({ data: { merchantId: merchant.id, ...data } });
+        const { skus, ...productData } = data;
+        return this.prisma.$transaction(async (tx) => {
+            const product = await tx.product.create({
+                data: {
+                    merchantId: merchant.id,
+                    ...productData,
+                    images: productData.images || []
+                }
+            });
+            if (skus && skus.length > 0) {
+                await Promise.all(skus.map((sku) => tx.sku.create({
+                    data: {
+                        productId: product.id,
+                        ...sku,
+                        pricePerCanonicalUnit: Math.round(sku.pricePerCanonicalUnit * 100) || 0,
+                    }
+                })));
+            }
+            return tx.product.findUnique({
+                where: { id: product.id },
+                include: { skus: true }
+            });
+        });
     }
     async updateProduct(ownerUserId, productId, data) {
         const product = await this.prisma.product.findUnique({

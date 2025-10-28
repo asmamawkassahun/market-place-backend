@@ -173,7 +173,21 @@ export declare class ProductsController {
         limit: number;
         totalPages: number;
     }>;
-    createProduct(user: any, body: CreateProductDto): Promise<{
+    createProduct(user: any, body: CreateProductDto): Promise<({
+        skus: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            unitType: import("@prisma/client").$Enums.UnitType;
+            unitIncrement: number;
+            packageSize: number | null;
+            pricePerCanonicalUnit: number;
+            currency: string;
+            active: boolean;
+            productId: string;
+        }[];
+    } & {
         id: string;
         slug: string;
         name: string;
@@ -183,7 +197,7 @@ export declare class ProductsController {
         images: string[];
         merchantId: string;
         categoryId: string | null;
-    }>;
+    }) | null>;
     updateProduct(user: any, id: string, body: any): Promise<{
         id: string;
         slug: string;

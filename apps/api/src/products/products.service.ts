@@ -150,11 +150,66 @@ export class ProductsService {
     };
   }
 
-  async createProduct(ownerUserId: string, data: { name: string; slug: string; categoryId?: string; description?: string; images?: string[] }) {
+  async createProduct(ownerUserId: string, data: { name: string; slug: string; categoryId?: string; description?: string; images?: string[]; skus?: any[] }) {
+    console.log('=== PRODUCT CREATION START ===');
+    console.log('Owner User ID:', ownerUserId);
+    console.log('Product data received:', JSON.stringify(data, null, 2));
+    
     // Resolve the merchant by the current user's ownership to satisfy FK constraint
     const merchant = await this.prisma.merchant.findUnique({ where: { ownerId: ownerUserId } });
-    if (!merchant) throw new NotFoundException('Merchant not found for current user');
-    return this.prisma.product.create({ data: { merchantId: merchant.id, ...data } });
+    if (!merchant) {
+      console.log('Merchant not found for user:', ownerUserId);
+      throw new NotFoundException('Merchant not found for current user');
+    }
+    console.log('Found merchant:', merchant.id);
+    
+    // Extract SKUs from data if present
+    const { skus, ...productData } = data;
+    console.log('SKUs to create:', skus);
+    
+    // Create product and SKUs in a transaction
+    return this.prisma.$transaction(async (tx) => {
+      console.log('Creating product...');
+      const product = await tx.product.create({ 
+        data: { 
+          merchantId: merchant.id, 
+          ...productData,
+          images: productData.images || []
+        } 
+      });
+      console.log('Product created with ID:', product.id);
+      
+      // Create SKUs if provided
+      if (skus && skus.length > 0) {
+        console.log('Creating SKUs...');
+        await Promise.all(
+          skus.map(async (sku, index) => {
+            console.log(`Creating SKU ${index}:`, sku);
+            const skuData = {
+              productId: product.id,
+              name: sku.name || 'Default',
+              unitType: sku.unitType || 'PIECE',
+              unitIncrement: sku.unitIncrement || 1,
+              packageSize: sku.packageSize || null,
+              pricePerCanonicalUnit: Math.round((sku.pricePerCanonicalUnit || 0) * 100),
+              currency: sku.currency || 'ETB',
+              active: sku.active !== undefined ? sku.active : true,
+            };
+            console.log(`SKU ${index} data:`, skuData);
+            return tx.sku.create({ data: skuData });
+          })
+        );
+        console.log('All SKUs created successfully');
+      }
+      
+      // Return product with SKUs
+      const result = await tx.product.findUnique({
+        where: { id: product.id },
+        include: { skus: true }
+      });
+      console.log('=== PRODUCT CREATION SUCCESS ===');
+      return result;
+    });
   }
 
   async updateProduct(ownerUserId: string, productId: string, data: any) {
