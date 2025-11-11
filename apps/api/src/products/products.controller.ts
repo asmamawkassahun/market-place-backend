@@ -18,7 +18,10 @@ export class ProductsController {
     @Query('merchantId') merchantId?: string,
     @Query('isActive') isActive?: boolean,
     @Query('sortBy') sortBy?: string,
-    @Query('sortOrder') sortOrder?: 'asc' | 'desc'
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('minPrice') minPrice?: number,
+    @Query('maxPrice') maxPrice?: number,
+    @Query('unitType') unitType?: string
   ) {
     return this.service.getProducts({
       page: page || 1,
@@ -28,7 +31,10 @@ export class ProductsController {
       merchantId,
       isActive,
       sortBy: sortBy || 'createdAt',
-      sortOrder: sortOrder || 'desc'
+      sortOrder: sortOrder || 'desc',
+      minPrice,
+      maxPrice,
+      unitType
     });
   }
 
@@ -42,7 +48,10 @@ export class ProductsController {
     @Query('limit') limit?: number,
     @Query('category') category?: string,
     @Query('search') search?: string,
-    @Query('isActive') isActive?: boolean
+    @Query('isActive') isActive?: boolean,
+    @Query('minPrice') minPrice?: number,
+    @Query('maxPrice') maxPrice?: number,
+    @Query('unitType') unitType?: string
   ) {
     console.log('[ProductsController] ✅ ROUTE MATCHED: /products/me');
     console.log('[ProductsController] getMyProducts called - userId:', user?.userId, 'role:', user?.role);
@@ -64,7 +73,10 @@ export class ProductsController {
       merchantId: merchant.id,
       isActive,
       sortBy: 'createdAt',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
+      minPrice,
+      maxPrice,
+      unitType
     });
     
     console.log('[ProductsController] ✅ Returning products:', {

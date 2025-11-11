@@ -10,6 +10,9 @@ export interface GetProductsParams {
   isActive?: boolean;
   sortBy: string;
   sortOrder: 'asc' | 'desc';
+  minPrice?: number;
+  maxPrice?: number;
+  unitType?: string;
 }
 
 @Injectable()
@@ -27,7 +30,7 @@ export class ProductsService {
   }
 
   async getProducts(params: GetProductsParams) {
-    const { page, limit, category, search, merchantId, isActive, sortBy, sortOrder } = params;
+    const { page, limit, category, search, merchantId, isActive, sortBy, sortOrder, minPrice, maxPrice, unitType } = params;
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -36,6 +39,30 @@ export class ProductsService {
     if (merchantId) where.merchantId = merchantId;
     if (isActive !== undefined) where.isActive = isActive;
 
+    // Filter by SKU properties (price and unitType)
+    // Always filter for active SKUs, and add additional filters if provided
+    const skuWhere: any = { active: true };
+    if (unitType) skuWhere.unitType = unitType;
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      // Convert ETB to cents (pricePerCanonicalUnit is stored in cents)
+      const minPriceCents = minPrice !== undefined ? Math.round(minPrice * 100) : undefined;
+      const maxPriceCents = maxPrice !== undefined ? Math.round(maxPrice * 100) : undefined;
+      
+      if (minPriceCents !== undefined && maxPriceCents !== undefined) {
+        skuWhere.pricePerCanonicalUnit = { gte: minPriceCents, lte: maxPriceCents };
+      } else if (minPriceCents !== undefined) {
+        skuWhere.pricePerCanonicalUnit = { gte: minPriceCents };
+      } else if (maxPriceCents !== undefined) {
+        skuWhere.pricePerCanonicalUnit = { lte: maxPriceCents };
+      }
+    }
+
+    // Always filter products to only show those with active SKUs
+    // If we have additional filters (unitType or price), apply those too
+    where.skus = {
+      some: skuWhere
+    };
+
     const [products, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
@@ -43,7 +70,9 @@ export class ProductsService {
         take: limit,
         orderBy: { [sortBy]: sortOrder },
         include: {
-          skus: true,
+          skus: {
+            where: skuWhere
+          },
           merchant: {
             select: { id: true, displayName: true, rating: true }
           },

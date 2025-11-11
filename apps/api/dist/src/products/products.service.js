@@ -27,7 +27,7 @@ let ProductsService = class ProductsService {
         return merchant;
     }
     async getProducts(params) {
-        const { page, limit, category, search, merchantId, isActive, sortBy, sortOrder } = params;
+        const { page, limit, category, search, merchantId, isActive, sortBy, sortOrder, minPrice, maxPrice, unitType } = params;
         const skip = (page - 1) * limit;
         const where = {};
         if (category)
@@ -38,6 +38,25 @@ let ProductsService = class ProductsService {
             where.merchantId = merchantId;
         if (isActive !== undefined)
             where.isActive = isActive;
+        const skuWhere = { active: true };
+        if (unitType)
+            skuWhere.unitType = unitType;
+        if (minPrice !== undefined || maxPrice !== undefined) {
+            const minPriceCents = minPrice !== undefined ? Math.round(minPrice * 100) : undefined;
+            const maxPriceCents = maxPrice !== undefined ? Math.round(maxPrice * 100) : undefined;
+            if (minPriceCents !== undefined && maxPriceCents !== undefined) {
+                skuWhere.pricePerCanonicalUnit = { gte: minPriceCents, lte: maxPriceCents };
+            }
+            else if (minPriceCents !== undefined) {
+                skuWhere.pricePerCanonicalUnit = { gte: minPriceCents };
+            }
+            else if (maxPriceCents !== undefined) {
+                skuWhere.pricePerCanonicalUnit = { lte: maxPriceCents };
+            }
+        }
+        where.skus = {
+            some: skuWhere
+        };
         const [products, total] = await Promise.all([
             this.prisma.product.findMany({
                 where,
@@ -45,7 +64,9 @@ let ProductsService = class ProductsService {
                 take: limit,
                 orderBy: { [sortBy]: sortOrder },
                 include: {
-                    skus: true,
+                    skus: {
+                        where: skuWhere
+                    },
                     merchant: {
                         select: { id: true, displayName: true, rating: true }
                     },

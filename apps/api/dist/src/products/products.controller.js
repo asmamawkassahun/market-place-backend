@@ -24,7 +24,7 @@ let ProductsController = class ProductsController {
     constructor(service) {
         this.service = service;
     }
-    async getProducts(page, limit, category, search, merchantId, isActive, sortBy, sortOrder) {
+    async getProducts(page, limit, category, search, merchantId, isActive, sortBy, sortOrder, minPrice, maxPrice, unitType) {
         return this.service.getProducts({
             page: page || 1,
             limit: limit || 10,
@@ -33,10 +33,13 @@ let ProductsController = class ProductsController {
             merchantId,
             isActive,
             sortBy: sortBy || 'createdAt',
-            sortOrder: sortOrder || 'desc'
+            sortOrder: sortOrder || 'desc',
+            minPrice,
+            maxPrice,
+            unitType
         });
     }
-    async getMyProducts(user, page, limit, category, search, isActive) {
+    async getMyProducts(user, page, limit, category, search, isActive, minPrice, maxPrice, unitType) {
         console.log('[ProductsController] ✅ ROUTE MATCHED: /products/me');
         console.log('[ProductsController] getMyProducts called - userId:', user?.userId, 'role:', user?.role);
         const merchant = await this.service.getMerchantByOwnerId(user.userId);
@@ -53,7 +56,10 @@ let ProductsController = class ProductsController {
             merchantId: merchant.id,
             isActive,
             sortBy: 'createdAt',
-            sortOrder: 'desc'
+            sortOrder: 'desc',
+            minPrice,
+            maxPrice,
+            unitType
         });
         console.log('[ProductsController] ✅ Returning products:', {
             count: result.products?.length || 0,
@@ -120,8 +126,11 @@ __decorate([
     __param(5, (0, common_1.Query)('isActive')),
     __param(6, (0, common_1.Query)('sortBy')),
     __param(7, (0, common_1.Query)('sortOrder')),
+    __param(8, (0, common_1.Query)('minPrice')),
+    __param(9, (0, common_1.Query)('maxPrice')),
+    __param(10, (0, common_1.Query)('unitType')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, String, String, String, Boolean, String, String]),
+    __metadata("design:paramtypes", [Number, Number, String, String, String, Boolean, String, String, Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getProducts", null);
 __decorate([
@@ -133,8 +142,11 @@ __decorate([
     __param(3, (0, common_1.Query)('category')),
     __param(4, (0, common_1.Query)('search')),
     __param(5, (0, common_1.Query)('isActive')),
+    __param(6, (0, common_1.Query)('minPrice')),
+    __param(7, (0, common_1.Query)('maxPrice')),
+    __param(8, (0, common_1.Query)('unitType')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, Number, String, String, Boolean]),
+    __metadata("design:paramtypes", [Object, Number, Number, String, String, Boolean, Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getMyProducts", null);
 __decorate([
