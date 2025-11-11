@@ -19,8 +19,49 @@ export class CartService {
   }
 
   async list(userId: string) {
+    // Get or create cart first
     const cart = await this.getOrCreateCart(userId);
-    return this.prisma.cart.findUnique({ where: { id: cart.id }, include: { items: { include: { sku: true } } } });
+    
+    // Fetch cart with items using the cart ID (more efficient)
+    const cartWithItems = await this.prisma.cart.findUnique({ 
+      where: { id: cart.id }, 
+      include: { 
+        items: { 
+          include: { 
+            sku: { 
+              include: { 
+                product: { 
+                  include: { 
+                    merchant: {
+                      select: {
+                        id: true,
+                        displayName: true,
+                        logoUrl: true
+                      }
+                    }
+                  } 
+                } 
+              } 
+            } 
+          } 
+        } 
+      } 
+    });
+    
+    // Ensure we always return a cart object with items array
+    if (!cartWithItems) {
+      // Fallback: return cart with empty items array
+      return {
+        ...cart,
+        items: []
+      };
+    }
+    
+    // Ensure items is always an array, never null or undefined
+    return {
+      ...cartWithItems,
+      items: Array.isArray(cartWithItems.items) ? cartWithItems.items : []
+    };
   }
 
   async removeItem(userId: string, cartItemId: string) {

@@ -17,6 +17,12 @@ let OrdersService = class OrdersService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async getMerchantByOwnerId(ownerId) {
+        return this.prisma.merchant.findUnique({
+            where: { ownerId },
+            select: { id: true }
+        });
+    }
     async createFromCart(userId, addressId, paymentProvider) {
         const cart = await this.prisma.cart.findFirst({ where: { userId }, include: { items: { include: { sku: { include: { product: true } } } } } });
         if (!cart || cart.items.length === 0)
@@ -240,6 +246,50 @@ let OrdersService = class OrdersService {
                 createdAt: order.createdAt
             },
             items: order.items
+        };
+    }
+    async getMerchantOrders(merchantId, params) {
+        const { page, limit, status, sortBy, sortOrder } = params;
+        const skip = (page - 1) * limit;
+        const where = { merchantId };
+        if (status)
+            where.status = status;
+        const [orders, total] = await Promise.all([
+            this.prisma.order.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: sortBy ? { [sortBy]: sortOrder || 'desc' } : { createdAt: 'desc' },
+                include: {
+                    user: {
+                        select: { id: true, phone: true, name: true }
+                    },
+                    items: {
+                        include: {
+                            sku: {
+                                include: {
+                                    product: {
+                                        select: { name: true, images: true }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    payments: true,
+                    shipments: true,
+                    address: {
+                        select: { fullName: true, line1: true, city: true }
+                    }
+                }
+            }),
+            this.prisma.order.count({ where })
+        ]);
+        return {
+            orders,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit)
         };
     }
 };

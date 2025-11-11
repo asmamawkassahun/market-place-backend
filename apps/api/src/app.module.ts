@@ -35,9 +35,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { I18nModule } from './i18n/i18n.module';
-import { AppGateway } from './gateway/app.gateway';
-import { ChatModule } from './chat/chat.module';
 import { StorageModule } from './storage/storage.module';
+import { ChatModule } from './chat/chat.module';
 // New advanced feature modules
 import { WishlistModule } from './wishlist/wishlist.module';
 import { PriceAlertsModule } from './price-alerts/price-alerts.module';
@@ -89,8 +88,8 @@ import { EventsModule } from './events/events.module';
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     I18nModule,
-    ChatModule,
     StorageModule,
+    ChatModule,
     // New advanced feature modules
     WishlistModule,
     PriceAlertsModule,
@@ -102,6 +101,6 @@ import { EventsModule } from './events/events.module';
     EventsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [AppService],
 })
 export class AppModule {}

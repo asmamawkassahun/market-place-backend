@@ -3,9 +3,27 @@ import { AddCartItemDto } from './dto/add-cart-item.dto';
 export declare class CartController {
     private readonly service;
     constructor(service: CartService);
-    list(user: any): Promise<({
+    list(user: any): Promise<{
         items: ({
             sku: {
+                product: {
+                    merchant: {
+                        id: string;
+                        displayName: string;
+                        logoUrl: string | null;
+                    };
+                } & {
+                    id: string;
+                    slug: string;
+                    name: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: string | null;
+                    images: string[];
+                    merchantId: string;
+                    categoryId: string | null;
+                };
+            } & {
                 id: string;
                 name: string;
                 createdAt: Date;
@@ -25,12 +43,11 @@ export declare class CartController {
             unitPrice: number;
             cartId: string;
         })[];
-    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-    }) | null>;
+    }>;
     add(user: any, body: AddCartItemDto): Promise<{
         id: string;
         quantity: number;

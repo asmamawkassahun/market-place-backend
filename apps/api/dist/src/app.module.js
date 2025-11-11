@@ -44,9 +44,8 @@ const cache_manager_1 = require("@nestjs/cache-manager");
 const schedule_1 = require("@nestjs/schedule");
 const event_emitter_1 = require("@nestjs/event-emitter");
 const i18n_module_1 = require("./i18n/i18n.module");
-const app_gateway_1 = require("./gateway/app.gateway");
-const chat_module_1 = require("./chat/chat.module");
 const storage_module_1 = require("./storage/storage.module");
+const chat_module_1 = require("./chat/chat.module");
 const wishlist_module_1 = require("./wishlist/wishlist.module");
 const price_alerts_module_1 = require("./price-alerts/price-alerts.module");
 const stock_notifications_module_1 = require("./stock-notifications/stock-notifications.module");
@@ -100,8 +99,8 @@ exports.AppModule = AppModule = __decorate([
             schedule_1.ScheduleModule.forRoot(),
             event_emitter_1.EventEmitterModule.forRoot(),
             i18n_module_1.I18nModule,
-            chat_module_1.ChatModule,
             storage_module_1.StorageModule,
+            chat_module_1.ChatModule,
             wishlist_module_1.WishlistModule,
             price_alerts_module_1.PriceAlertsModule,
             stock_notifications_module_1.StockNotificationsModule,
@@ -112,7 +111,7 @@ exports.AppModule = AppModule = __decorate([
             events_module_1.EventsModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, app_gateway_1.AppGateway],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

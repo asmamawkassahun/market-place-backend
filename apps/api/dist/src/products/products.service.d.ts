@@ -12,6 +12,11 @@ export interface GetProductsParams {
 export declare class ProductsService {
     private prisma;
     constructor(prisma: PrismaService);
+    getMerchantByOwnerId(ownerId: string): Promise<{
+        id: string;
+        displayName: string;
+        ownerId: string;
+    } | null>;
     getProducts(params: GetProductsParams): Promise<{
         products: ({
             category: {
@@ -219,7 +224,29 @@ export declare class ProductsService {
         merchantId: string;
         categoryId: string | null;
     }) | null>;
-    updateProduct(ownerUserId: string, productId: string, data: any): Promise<{
+    updateProduct(ownerUserId: string, productId: string, data: any): Promise<({
+        category: {
+            id: string;
+            name: string;
+        } | null;
+        merchant: {
+            id: string;
+            displayName: string;
+        };
+        skus: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            unitType: import("@prisma/client").$Enums.UnitType;
+            unitIncrement: number;
+            packageSize: number | null;
+            pricePerCanonicalUnit: number;
+            currency: string;
+            active: boolean;
+            productId: string;
+        }[];
+    } & {
         id: string;
         slug: string;
         name: string;
@@ -229,7 +256,7 @@ export declare class ProductsService {
         images: string[];
         merchantId: string;
         categoryId: string | null;
-    }>;
+    }) | null>;
     deleteProduct(ownerUserId: string, productId: string): Promise<{
         id: string;
         slug: string;

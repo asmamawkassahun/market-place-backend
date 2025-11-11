@@ -23,6 +23,19 @@ let OrdersController = class OrdersController {
         this.service = service;
     }
     async getOrders(user, page, limit, status, merchantId, sortBy, sortOrder) {
+        if (user.role === 'MERCHANT') {
+            const merchant = await this.service.getMerchantByOwnerId(user.userId);
+            if (!merchant) {
+                return { orders: [], total: 0, page: 1, limit: 10 };
+            }
+            return this.service.getMerchantOrders(merchant.id, {
+                page: page || 1,
+                limit: limit || 10,
+                status,
+                sortBy: sortBy || 'createdAt',
+                sortOrder: sortOrder || 'desc'
+            });
+        }
         return this.service.getOrders(user.userId, {
             page: page || 1,
             limit: limit || 10,
@@ -30,6 +43,20 @@ let OrdersController = class OrdersController {
             merchantId,
             sortBy: sortBy || 'createdAt',
             sortOrder: sortOrder || 'desc'
+        });
+    }
+    async getMyOrders(user, page, limit, status) {
+        if (user.role !== 'MERCHANT') {
+            throw new common_1.NotFoundException('This endpoint is only for merchants');
+        }
+        const merchant = await this.service.getMerchantByOwnerId(user.userId);
+        if (!merchant) {
+            throw new common_1.NotFoundException('Merchant not found for this user');
+        }
+        return this.service.getMerchantOrders(merchant.id, {
+            page: page || 1,
+            limit: limit || 10,
+            status
         });
     }
     async getOrder(user, id) {
@@ -78,6 +105,17 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number, Number, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "getOrders", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('me'),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
+    __param(3, (0, common_1.Query)('status')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, Number, String]),
+    __metadata("design:returntype", Promise)
+], OrdersController.prototype, "getMyOrders", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),

@@ -61,7 +61,7 @@ async function bootstrap() {
 
   // Swagger UI disabled for Postman-only testing
 
-  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  const port = process.env.PORT ? Number(process.env.PORT) : 3001;
   // eslint-disable-next-line no-console
   console.log('Using PORT=', port);
   try {

@@ -44,6 +44,12 @@ export class MerchantsController {
     return this.service.searchNearbyMerchants(lat, lon, radius);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getCurrentMerchant(@CurrentUser() user: any) {
+    return this.service.me(user.userId);
+  }
+
   @Get(':id')
   async getMerchant(@Param('id') id: string) {
     return this.service.getMerchant(id);
@@ -82,12 +88,6 @@ export class MerchantsController {
   @Get(':id/summary')
   async getMerchantSummary(@Param('id') merchantId: string) {
     return this.service.getMerchantSummary(merchantId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async getCurrentMerchant(@CurrentUser() user: any) {
-    return this.service.getCurrentMerchant(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

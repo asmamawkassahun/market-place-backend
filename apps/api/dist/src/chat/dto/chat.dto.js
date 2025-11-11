@@ -9,20 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChatMessageDto = void 0;
+exports.MarkReadDto = exports.CreateConversationDto = exports.SendMessageDto = void 0;
 const class_validator_1 = require("class-validator");
-class ChatMessageDto {
-    conversationId;
+const client_1 = require("@prisma/client");
+class SendMessageDto {
     content;
+    type;
+    attachments;
 }
-exports.ChatMessageDto = ChatMessageDto;
+exports.SendMessageDto = SendMessageDto;
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(5000),
     __metadata("design:type", String)
-], ChatMessageDto.prototype, "conversationId", void 0);
+], SendMessageDto.prototype, "content", void 0);
 __decorate([
+    (0, class_validator_1.IsEnum)(client_1.MessageType),
     (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], SendMessageDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], SendMessageDto.prototype, "attachments", void 0);
+class CreateConversationDto {
+    merchantId;
+}
+exports.CreateConversationDto = CreateConversationDto;
+__decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], ChatMessageDto.prototype, "content", void 0);
+], CreateConversationDto.prototype, "merchantId", void 0);
+class MarkReadDto {
+    messageId;
+}
+exports.MarkReadDto = MarkReadDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], MarkReadDto.prototype, "messageId", void 0);
 //# sourceMappingURL=chat.dto.js.map

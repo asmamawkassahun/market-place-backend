@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Query, NotFoundException } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
 import { RolesGuard } from '../common/roles.guard';
@@ -6,53 +6,74 @@ import { Roles } from '../common/roles.decorator';
 import { CurrentUser } from '../common/current-user.decorator';
 import { AddLotDto } from './dto/add-lot.dto';
 import { CreateInventoryMovementDto } from './dto/create-inventory-movement.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('inventory')
 export class InventoryController {
-  constructor(private readonly service: InventoryService) {}
+  constructor(
+    private readonly service: InventoryService,
+    private readonly prisma: PrismaService
+  ) {}
+
+  private async getMerchantId(userId: string): Promise<string> {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { ownerId: userId },
+      select: { id: true }
+    });
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found for this user');
+    }
+    return merchant.id;
+  }
 
   @Post('lots')
   @Roles('MERCHANT')
-  add(@CurrentUser() user: any, @Body() body: AddLotDto) {
-    return this.service.addLot(user.merchantId, body);
+  async add(@CurrentUser() user: any, @Body() body: AddLotDto) {
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.addLot(merchantId, body);
   }
 
   @Get('lots')
   @Roles('MERCHANT')
-  list(@CurrentUser() user: any) {
-    return this.service.listForMerchant(user.merchantId);
+  async list(@CurrentUser() user: any) {
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.listForMerchant(merchantId);
   }
 
   @Post('movements')
   @Roles('MERCHANT')
-  recordMovement(@CurrentUser() user: any, @Body() body: CreateInventoryMovementDto) {
-    return this.service.recordMovement(user.merchantId, body, user.userId);
+  async recordMovement(@CurrentUser() user: any, @Body() body: CreateInventoryMovementDto) {
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.recordMovement(merchantId, body, user.userId);
   }
 
   @Get('movements')
   @Roles('MERCHANT')
-  getMovements(
+  async getMovements(
     @CurrentUser() user: any,
     @Query('skuId') skuId?: string,
     @Query('limit') limit?: string,
   ) {
-    return this.service.getMovements(user.merchantId, skuId, limit ? parseInt(limit) : 50);
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.getMovements(merchantId, skuId, limit ? parseInt(limit) : 50);
   }
 
   @Get('analytics')
   @Roles('MERCHANT')
-  getAnalytics(@CurrentUser() user: any) {
-    return this.service.getInventoryAnalytics(user.merchantId);
+  async getAnalytics(@CurrentUser() user: any) {
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.getInventoryAnalytics(merchantId);
   }
 
   @Get('alerts')
   @Roles('MERCHANT')
-  getLowStockAlerts(
+  async getLowStockAlerts(
     @CurrentUser() user: any,
     @Query('threshold') threshold?: string,
   ) {
-    return this.service.getLowStockAlerts(user.merchantId, threshold ? parseInt(threshold) : 10);
+    const merchantId = await this.getMerchantId(user.userId);
+    return this.service.getLowStockAlerts(merchantId, threshold ? parseInt(threshold) : 10);
   }
 }
 

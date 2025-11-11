@@ -40,6 +40,9 @@ let MerchantsController = class MerchantsController {
     async searchNearbyMerchants(lat, lon, radius = 10) {
         return this.service.searchNearbyMerchants(lat, lon, radius);
     }
+    async getCurrentMerchant(user) {
+        return this.service.me(user.userId);
+    }
     async getMerchant(id) {
         return this.service.getMerchant(id);
     }
@@ -60,9 +63,6 @@ let MerchantsController = class MerchantsController {
     }
     async getMerchantSummary(merchantId) {
         return this.service.getMerchantSummary(merchantId);
-    }
-    async getCurrentMerchant(user) {
-        return this.service.getCurrentMerchant(user.userId);
     }
     async createMerchant(user, body) {
         try {
@@ -133,6 +133,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MerchantsController.prototype, "searchNearbyMerchants", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('me'),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], MerchantsController.prototype, "getCurrentMerchant", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -167,14 +175,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], MerchantsController.prototype, "getMerchantSummary", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('me'),
-    __param(0, (0, current_user_decorator_1.CurrentUser)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], MerchantsController.prototype, "getCurrentMerchant", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),

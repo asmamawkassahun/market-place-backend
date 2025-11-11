@@ -49,7 +49,7 @@ async function bootstrap() {
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true, transform: true, forbidUnknownValues: true }));
     app.useGlobalFilters(new http_exception_filter_1.AllExceptionsFilter());
     app.useGlobalInterceptors(new transform_interceptor_1.TransformInterceptor());
-    const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+    const port = process.env.PORT ? Number(process.env.PORT) : 3001;
     console.log('Using PORT=', port);
     try {
         console.log('About to call app.listen...');

@@ -2,6 +2,9 @@ import { PrismaService } from '../prisma/prisma.service';
 export declare class OrdersService {
     private prisma;
     constructor(prisma: PrismaService);
+    getMerchantByOwnerId(ownerId: string): Promise<{
+        id: string;
+    } | null>;
     createFromCart(userId: string, addressId: string, paymentProvider: string): Promise<{
         orderId: string;
         paymentId: string;
@@ -340,5 +343,81 @@ export declare class OrdersService {
             settledQty: number | null;
             unitPrice: number;
         })[];
+    }>;
+    getMerchantOrders(merchantId: string, params: any): Promise<{
+        orders: ({
+            user: {
+                id: string;
+                name: string | null;
+                phone: string | null;
+            };
+            address: {
+                fullName: string;
+                line1: string;
+                city: string;
+            } | null;
+            items: ({
+                sku: {
+                    product: {
+                        name: string;
+                        images: string[];
+                    };
+                } & {
+                    id: string;
+                    name: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    unitType: import("@prisma/client").$Enums.UnitType;
+                    unitIncrement: number;
+                    packageSize: number | null;
+                    pricePerCanonicalUnit: number;
+                    currency: string;
+                    active: boolean;
+                    productId: string;
+                };
+            } & {
+                id: string;
+                orderId: string;
+                skuId: string;
+                requestedQty: number;
+                settledQty: number | null;
+                unitPrice: number;
+            })[];
+            payments: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                currency: string;
+                status: import("@prisma/client").$Enums.PaymentStatus;
+                orderId: string;
+                provider: string;
+                amount: number;
+            }[];
+            shipments: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                otp: string | null;
+                status: import("@prisma/client").$Enums.ShipmentStatus;
+                orderId: string;
+                carrier: string;
+                trackingCode: string | null;
+                proofPhotoUrl: string | null;
+            }[];
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            merchantId: string;
+            currency: string;
+            userId: string;
+            totalAmount: number;
+            addressId: string | null;
+            status: import("@prisma/client").$Enums.OrderStatus;
+        })[];
+        total: number;
+        page: any;
+        limit: any;
+        totalPages: number;
     }>;
 }

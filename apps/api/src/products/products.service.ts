@@ -16,6 +16,16 @@ export interface GetProductsParams {
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
+  async getMerchantByOwnerId(ownerId: string) {
+    console.log('[ProductsService] Looking up merchant for ownerId:', ownerId);
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { ownerId },
+      select: { id: true, ownerId: true, displayName: true }
+    });
+    console.log('[ProductsService] Merchant lookup result:', merchant ? { id: merchant.id, displayName: merchant.displayName } : 'NOT FOUND');
+    return merchant;
+  }
+
   async getProducts(params: GetProductsParams) {
     const { page, limit, category, search, merchantId, isActive, sortBy, sortOrder } = params;
     const skip = (page - 1) * limit;
@@ -191,7 +201,7 @@ export class ProductsService {
               unitType: sku.unitType || 'PIECE',
               unitIncrement: sku.unitIncrement || 1,
               packageSize: sku.packageSize || null,
-              pricePerCanonicalUnit: Math.round((sku.pricePerCanonicalUnit || 0) * 100),
+              pricePerCanonicalUnit: Math.round(sku.pricePerCanonicalUnit || 0),
               currency: sku.currency || 'ETB',
               active: sku.active !== undefined ? sku.active : true,
             };
@@ -213,23 +223,128 @@ export class ProductsService {
   }
 
   async updateProduct(ownerUserId: string, productId: string, data: any) {
-    const product = await this.prisma.product.findUnique({
-      where: { id: productId },
-      include: { merchant: true }
-    });
+    try {
+      console.log('=== PRODUCT UPDATE START ===');
+      console.log('Owner User ID:', ownerUserId);
+      console.log('Product ID:', productId);
+      console.log('Update data received:', JSON.stringify(data, null, 2));
 
-    if (!product) {
-      throw new NotFoundException('Product not found');
+      const product = await this.prisma.product.findUnique({
+        where: { id: productId },
+        include: { merchant: true, skus: true }
+      });
+
+      if (!product) {
+        console.log('Product not found');
+        throw new NotFoundException('Product not found');
+      }
+
+      if (product.merchant.ownerId !== ownerUserId) {
+        console.log('Forbidden: User does not own this product');
+        throw new ForbiddenException('You can only update your own products');
+      }
+
+      // Extract SKUs from data if present
+      const { skus, ...productData } = data;
+      
+      // Only allow specific product fields to be updated
+      const allowedFields = ['name', 'slug', 'description', 'categoryId', 'images'];
+      const filteredProductData: any = {};
+      for (const key of allowedFields) {
+        if (productData[key] !== undefined) {
+          filteredProductData[key] = productData[key];
+        }
+      }
+
+      console.log('Filtered product data:', JSON.stringify(filteredProductData, null, 2));
+      console.log('SKUs to process:', skus?.length || 0);
+
+      // Update product and SKUs in a transaction
+      return await this.prisma.$transaction(async (tx) => {
+        // Update product fields (excluding SKUs)
+        const updatedProduct = await tx.product.update({
+          where: { id: productId },
+          data: filteredProductData
+        });
+
+      // Handle SKU updates if provided
+      if (skus && Array.isArray(skus)) {
+        // Get existing SKU IDs
+        const existingSkuIds = new Set(product.skus.map(sku => sku.id));
+        const incomingSkuIds = new Set(
+          skus
+            .filter((sku: any) => sku.id)
+            .map((sku: any) => sku.id)
+        );
+
+        // Delete SKUs that were removed (exist in DB but not in incoming data)
+        const skusToDelete = product.skus.filter(
+          sku => !incomingSkuIds.has(sku.id)
+        );
+        if (skusToDelete.length > 0) {
+          await tx.sku.deleteMany({
+            where: {
+              id: { in: skusToDelete.map(s => s.id) }
+            }
+          });
+        }
+
+        // Update or create SKUs
+        await Promise.all(
+          skus.map(async (sku: any) => {
+            const skuData = {
+              name: sku.name || 'Default',
+              unitType: sku.unitType || 'PIECE',
+              unitIncrement: sku.unitIncrement || 1,
+              packageSize: sku.packageSize || null,
+              pricePerCanonicalUnit: Math.round(sku.pricePerCanonicalUnit || 0),
+              currency: sku.currency || 'ETB',
+              active: sku.active !== undefined ? sku.active : true,
+            };
+
+            if (sku.id && existingSkuIds.has(sku.id)) {
+              // Update existing SKU
+              return tx.sku.update({
+                where: { id: sku.id },
+                data: skuData
+              });
+            } else {
+              // Create new SKU
+              return tx.sku.create({
+                data: {
+                  ...skuData,
+                  productId: productId
+                }
+              });
+            }
+          })
+        );
+      }
+
+        // Return updated product with SKUs
+        const result = await tx.product.findUnique({
+          where: { id: productId },
+          include: { 
+            skus: true,
+            merchant: {
+              select: { id: true, displayName: true }
+            },
+            category: {
+              select: { id: true, name: true }
+            }
+          }
+        });
+        
+        console.log('=== PRODUCT UPDATE SUCCESS ===');
+        return result;
+      });
+    } catch (error: any) {
+      console.error('=== PRODUCT UPDATE ERROR ===');
+      console.error('Error:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      throw error;
     }
-
-    if (product.merchant.ownerId !== ownerUserId) {
-      throw new ForbiddenException('You can only update your own products');
-    }
-
-    return this.prisma.product.update({
-      where: { id: productId },
-      data
-    });
   }
 
   async deleteProduct(ownerUserId: string, productId: string) {

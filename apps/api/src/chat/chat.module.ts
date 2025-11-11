@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { NotificationsModule } from '../notifications/notifications.module';
-import { StorageModule } from '../storage/storage.module';
-import { ChatService } from './chat.service';
+import { ConfigModule } from '@nestjs/config';
 import { ChatController } from './chat.controller';
-import { ChatGateway } from './chat.gateway';
-import { ChatCleanup } from './chat.cleanup';
+import { ChatService } from './chat.service';
+import { PusherService } from './pusher.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [JwtModule.register({}), NotificationsModule, StorageModule],
+  imports: [
+    PrismaModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET || 'dev_secret',
+        signOptions: { expiresIn: (process.env.JWT_EXPIRES_IN as any) || '15m' },
+      }),
+    }),
+  ],
   controllers: [ChatController],
-  providers: [ChatService, ChatGateway, ChatCleanup],
-  exports: [ChatService],
+  providers: [ChatService, PusherService],
+  exports: [ChatService, PusherService],
 })
 export class ChatModule {}
-
 

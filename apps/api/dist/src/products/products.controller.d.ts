@@ -44,7 +44,7 @@ export declare class ProductsController {
         limit: number;
         totalPages: number;
     }>;
-    searchProducts(q: string, page?: number, limit?: number, category?: string, merchantId?: string, isActive?: boolean, sortBy?: string, sortOrder?: 'asc' | 'desc'): Promise<{
+    getMyProducts(user: any, page?: number, limit?: number, category?: string, search?: string, isActive?: boolean): Promise<{
         products: ({
             category: {
                 id: string;
@@ -198,7 +198,29 @@ export declare class ProductsController {
         merchantId: string;
         categoryId: string | null;
     }) | null>;
-    updateProduct(user: any, id: string, body: any): Promise<{
+    updateProduct(user: any, id: string, body: any): Promise<({
+        category: {
+            id: string;
+            name: string;
+        } | null;
+        merchant: {
+            id: string;
+            displayName: string;
+        };
+        skus: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            unitType: import("@prisma/client").$Enums.UnitType;
+            unitIncrement: number;
+            packageSize: number | null;
+            pricePerCanonicalUnit: number;
+            currency: string;
+            active: boolean;
+            productId: string;
+        }[];
+    } & {
         id: string;
         slug: string;
         name: string;
@@ -208,7 +230,7 @@ export declare class ProductsController {
         images: string[];
         merchantId: string;
         categoryId: string | null;
-    }>;
+    }) | null>;
     deleteProduct(user: any, id: string): Promise<{
         id: string;
         slug: string;

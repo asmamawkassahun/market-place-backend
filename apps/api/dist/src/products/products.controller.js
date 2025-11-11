@@ -36,18 +36,43 @@ let ProductsController = class ProductsController {
             sortOrder: sortOrder || 'desc'
         });
     }
-    async searchProducts(q, page, limit, category, merchantId, isActive, sortBy, sortOrder) {
-        return this.service.searchProducts(q, {
+    async getMyProducts(user, page, limit, category, search, isActive) {
+        console.log('[ProductsController] ✅ ROUTE MATCHED: /products/me');
+        console.log('[ProductsController] getMyProducts called - userId:', user?.userId, 'role:', user?.role);
+        const merchant = await this.service.getMerchantByOwnerId(user.userId);
+        console.log('[ProductsController] Merchant lookup result:', merchant ? { id: merchant.id } : 'NOT FOUND');
+        if (!merchant) {
+            console.error('[ProductsController] ❌ Merchant not found for userId:', user.userId);
+            throw new common_1.NotFoundException('Merchant not found for this user. Please ensure you have a merchant account.');
+        }
+        const result = await this.service.getProducts({
             page: page || 1,
             limit: limit || 10,
             category,
-            merchantId,
+            search,
+            merchantId: merchant.id,
             isActive,
-            sortBy: sortBy || 'createdAt',
-            sortOrder: sortOrder || 'desc'
+            sortBy: 'createdAt',
+            sortOrder: 'desc'
         });
+        console.log('[ProductsController] ✅ Returning products:', {
+            count: result.products?.length || 0,
+            total: result.total,
+            page: result.page
+        });
+        return result;
     }
     async getProduct(id) {
+        console.log('[ProductsController] getProduct called with id:', id);
+        if (id === 'me') {
+            console.error('[ProductsController] ❌ CRITICAL ERROR: /products/me matched @Get(:id) route instead of @Get(me)!');
+            console.error('[ProductsController] This means the route registration order is wrong. The @Get(me) route must be registered before @Get(:id).');
+            throw new common_1.NotFoundException({
+                message: 'Route registration error: /products/me should match @Get(me) but matched @Get(:id). Please restart the backend server to fix route registration order.',
+                error: 'Route Registration Error',
+                statusCode: 404
+            });
+        }
         return this.service.getProduct(id);
     }
     async getProductSkus(productId) {
@@ -100,19 +125,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getProducts", null);
 __decorate([
-    (0, common_1.Get)('search'),
-    __param(0, (0, common_1.Query)('q')),
+    (0, common_1.Get)('me'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)('page')),
     __param(2, (0, common_1.Query)('limit')),
     __param(3, (0, common_1.Query)('category')),
-    __param(4, (0, common_1.Query)('merchantId')),
+    __param(4, (0, common_1.Query)('search')),
     __param(5, (0, common_1.Query)('isActive')),
-    __param(6, (0, common_1.Query)('sortBy')),
-    __param(7, (0, common_1.Query)('sortOrder')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Number, Number, String, String, Boolean, String, String]),
+    __metadata("design:paramtypes", [Object, Number, Number, String, String, Boolean]),
     __metadata("design:returntype", Promise)
-], ProductsController.prototype, "searchProducts", null);
+], ProductsController.prototype, "getMyProducts", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

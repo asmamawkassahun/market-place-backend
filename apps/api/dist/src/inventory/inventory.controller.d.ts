@@ -1,9 +1,12 @@
 import { InventoryService } from './inventory.service';
 import { AddLotDto } from './dto/add-lot.dto';
 import { CreateInventoryMovementDto } from './dto/create-inventory-movement.dto';
+import { PrismaService } from '../prisma/prisma.service';
 export declare class InventoryController {
     private readonly service;
-    constructor(service: InventoryService);
+    private readonly prisma;
+    constructor(service: InventoryService, prisma: PrismaService);
+    private getMerchantId;
     add(user: any, body: AddLotDto): Promise<{
         id: string;
         createdAt: Date;

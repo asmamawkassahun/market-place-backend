@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, NotFoundException } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
 import { CurrentUser } from '../common/current-user.decorator';
@@ -18,6 +18,21 @@ export class OrdersController {
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc'
   ) {
+    // If user is a merchant, only return their orders
+    if (user.role === 'MERCHANT') {
+      const merchant = await this.service.getMerchantByOwnerId(user.userId);
+      if (!merchant) {
+        return { orders: [], total: 0, page: 1, limit: 10 };
+      }
+      return this.service.getMerchantOrders(merchant.id, {
+        page: page || 1,
+        limit: limit || 10,
+        status,
+        sortBy: sortBy || 'createdAt',
+        sortOrder: sortOrder || 'desc'
+      });
+    }
+    // For buyers, return their orders
     return this.service.getOrders(user.userId, {
       page: page || 1,
       limit: limit || 10,
@@ -25,6 +40,29 @@ export class OrdersController {
       merchantId,
       sortBy: sortBy || 'createdAt',
       sortOrder: sortOrder || 'desc'
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMyOrders(
+    @CurrentUser() user: any,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('status') status?: string
+  ) {
+    // Get merchant ID for the authenticated merchant user
+    if (user.role !== 'MERCHANT') {
+      throw new NotFoundException('This endpoint is only for merchants');
+    }
+    const merchant = await this.service.getMerchantByOwnerId(user.userId);
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found for this user');
+    }
+    return this.service.getMerchantOrders(merchant.id, {
+      page: page || 1,
+      limit: limit || 10,
+      status
     });
   }
 

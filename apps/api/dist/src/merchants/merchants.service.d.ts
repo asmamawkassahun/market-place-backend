@@ -17,6 +17,30 @@ export declare class MerchantsService {
         ownerId: string;
     }>;
     me(ownerId: string): Promise<{
+        kyc: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            merchantId: string;
+            status: import("@prisma/client").$Enums.KycStatus;
+            documentUrl: string | null;
+            notes: string | null;
+        } | null;
+        payout: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            merchantId: string;
+            method: string;
+            accountRef: string;
+        } | null;
+        owner: {
+            id: string;
+            name: string | null;
+            phone: string | null;
+            email: string;
+        };
+    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -219,6 +243,30 @@ export declare class MerchantsService {
         rating: number;
     }>;
     getCurrentMerchant(ownerId: string): Promise<{
+        kyc: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            merchantId: string;
+            status: import("@prisma/client").$Enums.KycStatus;
+            documentUrl: string | null;
+            notes: string | null;
+        } | null;
+        payout: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            merchantId: string;
+            method: string;
+            accountRef: string;
+        } | null;
+        owner: {
+            id: string;
+            name: string | null;
+            phone: string | null;
+            email: string;
+        };
+    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;

@@ -18,9 +18,27 @@ export declare class CartService {
         unitPrice: number;
         cartId: string;
     }>;
-    list(userId: string): Promise<({
+    list(userId: string): Promise<{
         items: ({
             sku: {
+                product: {
+                    merchant: {
+                        id: string;
+                        displayName: string;
+                        logoUrl: string | null;
+                    };
+                } & {
+                    id: string;
+                    slug: string;
+                    name: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: string | null;
+                    images: string[];
+                    merchantId: string;
+                    categoryId: string | null;
+                };
+            } & {
                 id: string;
                 name: string;
                 createdAt: Date;
@@ -40,12 +58,11 @@ export declare class CartService {
             unitPrice: number;
             cartId: string;
         })[];
-    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         userId: string;
-    }) | null>;
+    }>;
     removeItem(userId: string, cartItemId: string): Promise<{
         id: string;
         quantity: number;

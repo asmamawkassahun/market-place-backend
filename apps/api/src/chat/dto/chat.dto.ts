@@ -1,12 +1,31 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsArray, MaxLength } from 'class-validator';
+import { MessageType, SenderRole } from '@prisma/client';
 
-export class ChatMessageDto {
+export class SendMessageDto {
   @IsString()
-  conversationId: string;
-
-  @IsOptional()
-  @IsString()
+  @MaxLength(5000)
   content?: string;
+
+  @IsEnum(MessageType)
+  @IsOptional()
+  type?: MessageType;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  attachments?: string[];
 }
+
+export class CreateConversationDto {
+  @IsString()
+  merchantId: string;
+}
+
+export class MarkReadDto {
+  @IsString()
+  messageId: string;
+}
+
+
 
 

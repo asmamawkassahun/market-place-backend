@@ -32,7 +32,40 @@ let CartService = class CartService {
     }
     async list(userId) {
         const cart = await this.getOrCreateCart(userId);
-        return this.prisma.cart.findUnique({ where: { id: cart.id }, include: { items: { include: { sku: true } } } });
+        const cartWithItems = await this.prisma.cart.findUnique({
+            where: { id: cart.id },
+            include: {
+                items: {
+                    include: {
+                        sku: {
+                            include: {
+                                product: {
+                                    include: {
+                                        merchant: {
+                                            select: {
+                                                id: true,
+                                                displayName: true,
+                                                logoUrl: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        if (!cartWithItems) {
+            return {
+                ...cart,
+                items: []
+            };
+        }
+        return {
+            ...cartWithItems,
+            items: Array.isArray(cartWithItems.items) ? cartWithItems.items : []
+        };
     }
     async removeItem(userId, cartItemId) {
         const cart = await this.getOrCreateCart(userId);

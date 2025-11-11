@@ -48,7 +48,21 @@ let MerchantsService = class MerchantsService {
         });
     }
     async me(ownerId) {
-        const m = await this.prisma.merchant.findUnique({ where: { ownerId } });
+        const m = await this.prisma.merchant.findUnique({
+            where: { ownerId },
+            include: {
+                payout: true,
+                kyc: true,
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        phone: true,
+                        name: true
+                    }
+                }
+            }
+        });
         if (!m)
             throw new common_1.NotFoundException('Merchant not found');
         return m;
@@ -249,9 +263,36 @@ let MerchantsService = class MerchantsService {
         if (merchant.ownerId !== ownerId) {
             throw new common_1.BadRequestException('You can only update your own merchant profile');
         }
-        return this.prisma.merchant.update({
-            where: { id },
-            data
+        const { payout, ...merchantData } = data;
+        return this.prisma.$transaction(async (tx) => {
+            const updatedMerchant = await tx.merchant.update({
+                where: { id },
+                data: merchantData
+            });
+            if (payout && payout.method && payout.accountRef) {
+                const existingPayout = await tx.merchantPayout.findUnique({
+                    where: { merchantId: id }
+                });
+                if (existingPayout) {
+                    await tx.merchantPayout.update({
+                        where: { merchantId: id },
+                        data: {
+                            method: payout.method,
+                            accountRef: payout.accountRef
+                        }
+                    });
+                }
+                else {
+                    await tx.merchantPayout.create({
+                        data: {
+                            merchantId: id,
+                            method: payout.method,
+                            accountRef: payout.accountRef
+                        }
+                    });
+                }
+            }
+            return updatedMerchant;
         });
     }
     async deleteMerchant(ownerId, id) {

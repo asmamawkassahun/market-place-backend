@@ -43,7 +43,21 @@ export class MerchantsService {
   }
 
   async me(ownerId: string) {
-    const m = await this.prisma.merchant.findUnique({ where: { ownerId } });
+    const m = await this.prisma.merchant.findUnique({ 
+      where: { ownerId },
+      include: {
+        payout: true,
+        kyc: true,
+        owner: {
+          select: {
+            id: true,
+            email: true,
+            phone: true,
+            name: true
+          }
+        }
+      }
+    });
     if (!m) throw new NotFoundException('Merchant not found');
     return m;
   }
@@ -267,9 +281,42 @@ export class MerchantsService {
       throw new BadRequestException('You can only update your own merchant profile');
     }
 
-    return this.prisma.merchant.update({
-      where: { id },
-      data
+    // Handle payout update separately
+    const { payout, ...merchantData } = data;
+
+    return this.prisma.$transaction(async (tx) => {
+      // Update merchant
+      const updatedMerchant = await tx.merchant.update({
+        where: { id },
+        data: merchantData
+      });
+
+      // Update or create payout if provided
+      if (payout && payout.method && payout.accountRef) {
+        const existingPayout = await tx.merchantPayout.findUnique({
+          where: { merchantId: id }
+        });
+
+        if (existingPayout) {
+          await tx.merchantPayout.update({
+            where: { merchantId: id },
+            data: {
+              method: payout.method,
+              accountRef: payout.accountRef
+            }
+          });
+        } else {
+          await tx.merchantPayout.create({
+            data: {
+              merchantId: id,
+              method: payout.method,
+              accountRef: payout.accountRef
+            }
+          });
+        }
+      }
+
+      return updatedMerchant;
     });
   }
 
