@@ -29,12 +29,16 @@ async function bootstrap() {
     app.use((0, cookie_parser_1.default)());
     app.use(new correlation_id_middleware_1.CorrelationIdMiddleware().use);
     app.enableCors({
-        origin: ['http://localhost:3000', 'http://localhost:3002'],
+        origin: (origin, callback) => {
+            callback(null, true);
+        },
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID'],
         credentials: true,
     });
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix('api', {
+        exclude: ['health', 'api/health'],
+    });
     app.use((req, res, next) => {
         if (req.method === 'OPTIONS') {
             res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -53,7 +57,7 @@ async function bootstrap() {
     console.log('Using PORT=', port);
     try {
         console.log('About to call app.listen...');
-        await app.listen(port);
+        await app.listen(port, '0.0.0.0');
         console.log('app.listen resolved');
     }
     catch (err) {

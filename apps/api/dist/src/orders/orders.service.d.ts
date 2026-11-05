@@ -8,6 +8,15 @@ export declare class OrdersService {
     createFromCart(userId: string, addressId: string, paymentProvider: string): Promise<{
         orderId: string;
         paymentId: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        merchantId: string;
+        currency: string;
+        userId: string;
+        totalAmount: number;
+        addressId: string | null;
+        status: import("@prisma/client").$Enums.OrderStatus;
     }>;
     list(userId: string): import("@prisma/client").Prisma.PrismaPromise<({
         items: {
@@ -131,6 +140,12 @@ export declare class OrdersService {
             displayName: string;
             rating: number;
         };
+        user: {
+            id: string;
+            name: string | null;
+            phone: string | null;
+            email: string;
+        };
         address: {
             id: string;
             createdAt: Date;
@@ -217,7 +232,19 @@ export declare class OrdersService {
         addressId: string | null;
         status: import("@prisma/client").$Enums.OrderStatus;
     }>;
-    createOrder(userId: string, data: any): Promise<void>;
+    createOrder(userId: string, data: any): Promise<{
+        orderId: string;
+        paymentId: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        merchantId: string;
+        currency: string;
+        userId: string;
+        totalAmount: number;
+        addressId: string | null;
+        status: import("@prisma/client").$Enums.OrderStatus;
+    }>;
     updateOrder(userId: string, id: string, data: any): Promise<{
         id: string;
         createdAt: Date;

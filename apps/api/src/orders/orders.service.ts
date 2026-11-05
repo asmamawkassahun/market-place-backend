@@ -26,7 +26,7 @@ export class OrdersService {
       await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
       const payment = await tx.payment.create({ data: { orderId: order.id, provider: paymentProvider, amount: totalAmount } });
       await tx.escrow.create({ data: { paymentId: payment.id, holdAmount: totalAmount } });
-      return { orderId: order.id, paymentId: payment.id };
+      return { ...order, orderId: order.id, paymentId: payment.id, id: order.id };
     });
   }
 
@@ -85,7 +85,13 @@ export class OrdersService {
 
   async getOrder(userId: string, id: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id, userId },
+      where: {
+        id,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      },
       include: {
         items: {
           include: {
@@ -107,7 +113,10 @@ export class OrdersService {
         merchant: {
           select: { id: true, displayName: true, rating: true }
         },
-        address: true
+        address: true,
+        user: {
+          select: { id: true, email: true, phone: true, name: true }
+        }
       }
     });
 
@@ -119,14 +128,21 @@ export class OrdersService {
   }
 
   async createOrder(userId: string, data: any) {
-    // This would create an order directly without going through cart
-    // For now, just throw an error as this is not implemented
-    throw new BadRequestException('Direct order creation not implemented. Use createFromCart instead.');
+    if (data?.addressId && data?.paymentProvider) {
+      return this.createFromCart(userId, data.addressId, data.paymentProvider);
+    }
+    throw new BadRequestException('Direct order creation requires addressId and paymentProvider.');
   }
 
   async updateOrder(userId: string, id: string, data: any) {
     const order = await this.prisma.order.findFirst({
-      where: { id, userId }
+      where: {
+        id,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      }
     });
 
     if (!order) {
@@ -141,7 +157,13 @@ export class OrdersService {
 
   async cancelOrder(userId: string, id: string, reason?: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id, userId }
+      where: {
+        id,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      }
     });
 
     if (!order) {
@@ -167,7 +189,13 @@ export class OrdersService {
 
   async updateOrderStatus(userId: string, id: string, status: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id, userId }
+      where: {
+        id,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      }
     });
 
     if (!order) {
@@ -185,7 +213,13 @@ export class OrdersService {
 
   async getOrderItems(userId: string, orderId: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId }
+      where: {
+        id: orderId,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      }
     });
 
     if (!order) {
@@ -208,7 +242,13 @@ export class OrdersService {
 
   async getOrderTracking(userId: string, orderId: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId }
+      where: {
+        id: orderId,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      }
     });
 
     if (!order) {
@@ -233,7 +273,13 @@ export class OrdersService {
 
   async getOrderInvoice(userId: string, orderId: string) {
     const order = await this.prisma.order.findFirst({
-      where: { id: orderId, userId },
+      where: {
+        id: orderId,
+        OR: [
+          { userId },
+          { merchant: { ownerId: userId } }
+        ]
+      },
       include: {
         invoice: true,
         items: {

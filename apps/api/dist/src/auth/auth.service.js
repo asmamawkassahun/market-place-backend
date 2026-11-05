@@ -67,9 +67,11 @@ let AuthService = class AuthService {
                 throw new Error('Failed to send email');
             }
             console.log(`[AuthService] OTP request successful`);
+            const isDev = process.env.NODE_ENV === 'development';
             return {
                 success: true,
-                message: 'OTP sent successfully to your email'
+                message: 'OTP sent successfully to your email',
+                ...(isDev ? { otp } : {}),
             };
         }
         catch (error) {

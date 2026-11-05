@@ -1,15 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 
-@Controller('health')
+@Controller()
 export class HealthController {
-  constructor(private health: HealthCheckService) {}
-
-  @Get()
-  @HealthCheck()
-  check() {
-    return this.health.check([]);
+  @Get(['health', 'api/health'])
+  checkHealth() {
+    return {
+      status: 'ok',
+      message: 'Marketplace backend is running',
+      timestamp: new Date().toISOString(),
+    };
   }
 }
-
-

@@ -33,13 +33,18 @@ async function bootstrap() {
   
   // Enable CORS using NestJS built-in method
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3002'],
+    origin: (origin: any, callback: any) => {
+      // Allow requests with no origin (like mobile apps, curl, or Postman) or any origin in dev/prod
+      callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID'],
     credentials: true,
   });
   
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: ['health', 'api/health'],
+  });
   
   // Handle OPTIONS requests after global prefix
   app.use((req: any, res: any, next: any) => {
@@ -67,7 +72,7 @@ async function bootstrap() {
   try {
     // eslint-disable-next-line no-console
     console.log('About to call app.listen...');
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
     // eslint-disable-next-line no-console
     console.log('app.listen resolved');
   } catch (err) {

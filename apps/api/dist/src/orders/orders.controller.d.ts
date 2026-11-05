@@ -239,6 +239,12 @@ export declare class OrdersController {
             displayName: string;
             rating: number;
         };
+        user: {
+            id: string;
+            name: string | null;
+            phone: string | null;
+            email: string;
+        };
         address: {
             id: string;
             createdAt: Date;
@@ -325,13 +331,34 @@ export declare class OrdersController {
         addressId: string | null;
         status: import("@prisma/client").$Enums.OrderStatus;
     }>;
-    createOrder(user: any, body: any): Promise<void>;
+    createOrder(user: any, body: any): Promise<{
+        orderId: string;
+        paymentId: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        merchantId: string;
+        currency: string;
+        userId: string;
+        totalAmount: number;
+        addressId: string | null;
+        status: import("@prisma/client").$Enums.OrderStatus;
+    }>;
     createFromCart(user: any, body: {
         addressId: string;
         paymentProvider: string;
     }): Promise<{
         orderId: string;
         paymentId: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        merchantId: string;
+        currency: string;
+        userId: string;
+        totalAmount: number;
+        addressId: string | null;
+        status: import("@prisma/client").$Enums.OrderStatus;
     }>;
     updateOrder(user: any, id: string, body: any): Promise<{
         id: string;

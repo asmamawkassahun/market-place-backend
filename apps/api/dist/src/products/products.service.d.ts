@@ -17,43 +17,43 @@ export declare class ProductsService {
     constructor(prisma: PrismaService);
     getMerchantByOwnerId(ownerId: string): Promise<{
         id: string;
-        ownerId: string;
         displayName: string;
+        ownerId: string;
     } | null>;
     getProducts(params: GetProductsParams): Promise<{
         products: ({
+            category: {
+                id: string;
+                name: string;
+            } | null;
             merchant: {
                 id: string;
                 displayName: string;
                 rating: number;
             };
-            category: {
-                id: string;
-                name: string;
-            } | null;
             skus: {
                 id: string;
+                name: string;
                 createdAt: Date;
                 updatedAt: Date;
-                name: string;
-                productId: string;
                 unitType: import("@prisma/client").$Enums.UnitType;
                 unitIncrement: number;
                 packageSize: number | null;
                 pricePerCanonicalUnit: number;
                 currency: string;
                 active: boolean;
+                productId: string;
             }[];
         } & {
             id: string;
-            description: string | null;
+            slug: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
+            description: string | null;
+            images: string[];
             merchantId: string;
             categoryId: string | null;
-            slug: string;
-            images: string[];
         })[];
         total: number;
         page: number;
@@ -62,38 +62,38 @@ export declare class ProductsService {
     }>;
     searchProducts(query: string, params: Omit<GetProductsParams, 'search'>): Promise<{
         products: ({
+            category: {
+                id: string;
+                name: string;
+            } | null;
             merchant: {
                 id: string;
                 displayName: string;
                 rating: number;
             };
-            category: {
-                id: string;
-                name: string;
-            } | null;
             skus: {
                 id: string;
+                name: string;
                 createdAt: Date;
                 updatedAt: Date;
-                name: string;
-                productId: string;
                 unitType: import("@prisma/client").$Enums.UnitType;
                 unitIncrement: number;
                 packageSize: number | null;
                 pricePerCanonicalUnit: number;
                 currency: string;
                 active: boolean;
+                productId: string;
             }[];
         } & {
             id: string;
-            description: string | null;
+            slug: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
+            description: string | null;
+            images: string[];
             merchantId: string;
             categoryId: string | null;
-            slug: string;
-            images: string[];
         })[];
         total: number;
         page: number;
@@ -101,51 +101,51 @@ export declare class ProductsService {
         totalPages: number;
     }>;
     getProduct(id: string): Promise<{
+        category: {
+            id: string;
+            name: string;
+        } | null;
         merchant: {
             id: string;
             displayName: string;
             rating: number;
         };
-        category: {
-            id: string;
-            name: string;
-        } | null;
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }>;
     getProductSkus(productId: string): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
-        productId: string;
         unitType: import("@prisma/client").$Enums.UnitType;
         unitIncrement: number;
         packageSize: number | null;
         pricePerCanonicalUnit: number;
         currency: string;
         active: boolean;
+        productId: string;
     }[]>;
     getProductReviews(productId: string, params: {
         page: number;
@@ -159,11 +159,11 @@ export declare class ProductsService {
             };
         } & {
             id: string;
-            rating: number;
             createdAt: Date;
+            rating: number;
             images: string[];
-            productId: string;
             userId: string;
+            productId: string;
             comment: string | null;
         })[];
         total: number;
@@ -184,8 +184,8 @@ export declare class ProductsService {
         } & {
             id: string;
             createdAt: Date;
-            productId: string;
             userId: string;
+            productId: string;
             question: string;
             answer: string | null;
             answeredAt: Date | null;
@@ -205,71 +205,71 @@ export declare class ProductsService {
     }): Promise<({
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }) | null>;
     updateProduct(ownerUserId: string, productId: string, data: any): Promise<({
-        merchant: {
-            id: string;
-            displayName: string;
-        };
         category: {
             id: string;
             name: string;
         } | null;
+        merchant: {
+            id: string;
+            displayName: string;
+        };
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }) | null>;
     deleteProduct(ownerUserId: string, productId: string): Promise<{
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }>;
     createProductSku(ownerUserId: string, productId: string, data: {
         name: string;
@@ -279,42 +279,42 @@ export declare class ProductsService {
         pricePerCanonicalUnit: number;
     }): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
-        productId: string;
         unitType: import("@prisma/client").$Enums.UnitType;
         unitIncrement: number;
         packageSize: number | null;
         pricePerCanonicalUnit: number;
         currency: string;
         active: boolean;
+        productId: string;
     }>;
     updateProductSku(ownerUserId: string, productId: string, skuId: string, data: any): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
-        productId: string;
         unitType: import("@prisma/client").$Enums.UnitType;
         unitIncrement: number;
         packageSize: number | null;
         pricePerCanonicalUnit: number;
         currency: string;
         active: boolean;
+        productId: string;
     }>;
     deleteProductSku(ownerUserId: string, productId: string, skuId: string): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
-        productId: string;
         unitType: import("@prisma/client").$Enums.UnitType;
         unitIncrement: number;
         packageSize: number | null;
         pricePerCanonicalUnit: number;
         currency: string;
         active: boolean;
+        productId: string;
     }>;
     create(ownerUserId: string, data: {
         name: string;
@@ -325,27 +325,27 @@ export declare class ProductsService {
     }): Promise<({
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }) | null>;
     addSku(productId: string, data: {
         name: string;
@@ -355,83 +355,83 @@ export declare class ProductsService {
         pricePerCanonicalUnit: number;
     }): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
-        productId: string;
         unitType: import("@prisma/client").$Enums.UnitType;
         unitIncrement: number;
         packageSize: number | null;
         pricePerCanonicalUnit: number;
         currency: string;
         active: boolean;
+        productId: string;
     }>;
     findOne(id: string): Promise<{
+        category: {
+            id: string;
+            name: string;
+        } | null;
         merchant: {
             id: string;
             displayName: string;
             rating: number;
         };
-        category: {
-            id: string;
-            name: string;
-        } | null;
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     }>;
     search(q?: string): Promise<({
+        category: {
+            id: string;
+            name: string;
+        } | null;
         merchant: {
             id: string;
             displayName: string;
             rating: number;
         };
-        category: {
-            id: string;
-            name: string;
-        } | null;
         skus: {
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            name: string;
-            productId: string;
             unitType: import("@prisma/client").$Enums.UnitType;
             unitIncrement: number;
             packageSize: number | null;
             pricePerCanonicalUnit: number;
             currency: string;
             active: boolean;
+            productId: string;
         }[];
     } & {
         id: string;
-        description: string | null;
+        slug: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
-        name: string;
+        description: string | null;
+        images: string[];
         merchantId: string;
         categoryId: string | null;
-        slug: string;
-        images: string[];
     })[]>;
 }

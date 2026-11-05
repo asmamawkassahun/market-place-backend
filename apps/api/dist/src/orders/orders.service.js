@@ -37,7 +37,7 @@ let OrdersService = class OrdersService {
             await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
             const payment = await tx.payment.create({ data: { orderId: order.id, provider: paymentProvider, amount: totalAmount } });
             await tx.escrow.create({ data: { paymentId: payment.id, holdAmount: totalAmount } });
-            return { orderId: order.id, paymentId: payment.id };
+            return { ...order, orderId: order.id, paymentId: payment.id, id: order.id };
         });
     }
     list(userId) {
@@ -91,7 +91,13 @@ let OrdersService = class OrdersService {
     }
     async getOrder(userId, id) {
         const order = await this.prisma.order.findFirst({
-            where: { id, userId },
+            where: {
+                id,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            },
             include: {
                 items: {
                     include: {
@@ -113,7 +119,10 @@ let OrdersService = class OrdersService {
                 merchant: {
                     select: { id: true, displayName: true, rating: true }
                 },
-                address: true
+                address: true,
+                user: {
+                    select: { id: true, email: true, phone: true, name: true }
+                }
             }
         });
         if (!order) {
@@ -122,11 +131,20 @@ let OrdersService = class OrdersService {
         return order;
     }
     async createOrder(userId, data) {
-        throw new common_1.BadRequestException('Direct order creation not implemented. Use createFromCart instead.');
+        if (data?.addressId && data?.paymentProvider) {
+            return this.createFromCart(userId, data.addressId, data.paymentProvider);
+        }
+        throw new common_1.BadRequestException('Direct order creation requires addressId and paymentProvider.');
     }
     async updateOrder(userId, id, data) {
         const order = await this.prisma.order.findFirst({
-            where: { id, userId }
+            where: {
+                id,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            }
         });
         if (!order) {
             throw new common_1.BadRequestException('Order not found');
@@ -138,7 +156,13 @@ let OrdersService = class OrdersService {
     }
     async cancelOrder(userId, id, reason) {
         const order = await this.prisma.order.findFirst({
-            where: { id, userId }
+            where: {
+                id,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            }
         });
         if (!order) {
             throw new common_1.BadRequestException('Order not found');
@@ -159,7 +183,13 @@ let OrdersService = class OrdersService {
     }
     async updateOrderStatus(userId, id, status) {
         const order = await this.prisma.order.findFirst({
-            where: { id, userId }
+            where: {
+                id,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            }
         });
         if (!order) {
             throw new common_1.BadRequestException('Order not found');
@@ -174,7 +204,13 @@ let OrdersService = class OrdersService {
     }
     async getOrderItems(userId, orderId) {
         const order = await this.prisma.order.findFirst({
-            where: { id: orderId, userId }
+            where: {
+                id: orderId,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            }
         });
         if (!order) {
             throw new common_1.BadRequestException('Order not found');
@@ -194,7 +230,13 @@ let OrdersService = class OrdersService {
     }
     async getOrderTracking(userId, orderId) {
         const order = await this.prisma.order.findFirst({
-            where: { id: orderId, userId }
+            where: {
+                id: orderId,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            }
         });
         if (!order) {
             throw new common_1.BadRequestException('Order not found');
@@ -215,7 +257,13 @@ let OrdersService = class OrdersService {
     }
     async getOrderInvoice(userId, orderId) {
         const order = await this.prisma.order.findFirst({
-            where: { id: orderId, userId },
+            where: {
+                id: orderId,
+                OR: [
+                    { userId },
+                    { merchant: { ownerId: userId } }
+                ]
+            },
             include: {
                 invoice: true,
                 items: {
