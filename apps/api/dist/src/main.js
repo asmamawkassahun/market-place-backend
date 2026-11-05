@@ -29,11 +29,16 @@ async function bootstrap() {
     app.use((0, cookie_parser_1.default)());
     app.use(new correlation_id_middleware_1.CorrelationIdMiddleware().use);
     app.enableCors({
-        origin: (origin, callback) => {
-            callback(null, true);
-        },
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID'],
+        origin: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+        allowedHeaders: [
+            'Origin',
+            'X-Requested-With',
+            'Content-Type',
+            'Accept',
+            'Authorization',
+            'X-Correlation-ID',
+        ],
         credentials: true,
     });
     app.setGlobalPrefix('api', {
@@ -41,11 +46,18 @@ async function bootstrap() {
     });
     app.use((req, res, next) => {
         if (req.method === 'OPTIONS') {
-            res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+            const origin = req.headers.origin;
+            if (origin) {
+                res.header('Access-Control-Allow-Origin', origin);
+                res.header('Access-Control-Allow-Credentials', 'true');
+            }
+            else {
+                res.header('Access-Control-Allow-Origin', '*');
+            }
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Correlation-ID');
-            res.header('Access-Control-Allow-Credentials', 'true');
-            res.status(200).end();
+            res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] ||
+                'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Correlation-ID');
+            res.status(204).end();
             return;
         }
         next();
